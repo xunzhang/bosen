@@ -1,0 +1,51 @@
+language: cpp
+
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
+      env: CXX=g++-4.8 CC=gcc-4.8
+      dist: trusty
+      sudo: required
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - boost-latest
+          packages:
+            - gcc-4.8
+            - g++-4.8
+            - libgoogle-glog-dev
+            - libgoogle-perftools-dev
+            - libsnappy-dev
+            - libsparsehash-dev
+            - libgflags-dev
+            - libboost-system1.55-dev
+            - libboost-thread1.55-dev
+            - libzmq3-dev
+            - libyaml-cpp-dev
+            - libleveldb-dev
+            - libconfig++-dev
+            - libghc-hashtables-dev
+            - libtcmalloc-minimal4
+            - libevent-pthreads-2.0-5
+            - libeigen3-dev
+
+#before_install:
+
+install:
+  - cd $TRAVIS_BUILD_DIR
+  - mkdir build
+  - sudo mkdir -p "/opt/bosen"
+  - cd build
+  - cmake -DCMAKE_INSTALL_PREFIX=/opt/bosen ..
+
+after_failure:
+  - cat $TRAVIS_BUILD_DIR/build/CMakeFiles/CMakeError.log
+
+script:
+  - make -j$(nproc)
+
+branches:
+  except:
+    - legacy
